@@ -10,6 +10,8 @@ defmodule Blog.Accounts.User do
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
+    has_many :categories, Blog.Category
+    has_many :posts, Blog.Post
 
     timestamps(type: :utc_datetime)
   end

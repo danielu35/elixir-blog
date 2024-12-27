@@ -5,7 +5,8 @@ defmodule Blog.Category do
   schema "categories" do
     field :active, :boolean, default: false
     field :name, :string
-    field :user_id, :id
+    belongs_to :user, Blog.User
+    has_many :posts, Blog.Post
 
     timestamps(type: :utc_datetime)
   end
@@ -13,7 +14,7 @@ defmodule Blog.Category do
   @doc false
   def changeset(category, attrs) do
     category
-    |> cast(attrs, [:name, :active])
-    |> validate_required([:name, :active])
+    |> cast(attrs, [:name, :active, :user_id])
+    |> validate_required([:name, :active, :user_id])
   end
 end

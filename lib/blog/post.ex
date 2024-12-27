@@ -6,8 +6,9 @@ defmodule Blog.Post do
     field :active, :boolean, default: false
     field :title, :string
     field :summery, :string
-    field :user_id, :id
-    field :category_id, :id
+    field :content, :string
+    belongs_to :user, Blog.Accounts.User
+    belongs_to :category, Blog.Category
 
     timestamps(type: :utc_datetime)
   end
@@ -15,7 +16,7 @@ defmodule Blog.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:title, :summery, :active])
-    |> validate_required([:title, :summery, :active])
+    |> cast(attrs, [:title, :summery, :active, :user_id, :category_id])
+    |> validate_required([:title, :summery, :active, :user_id, :category_id])
   end
 end
