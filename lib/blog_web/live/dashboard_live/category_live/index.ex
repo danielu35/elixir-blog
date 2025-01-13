@@ -1,8 +1,9 @@
 defmodule BlogWeb.Live.DashboardLive.CategoryLive.Index do
+  use BlogWeb, :live_view
   alias Blog.Catalog
   alias Blog.Category
   alias Blog.Accounts
-  use BlogWeb, :live_view
+
 
   def mount(_params, session, socket) do
     current_user = Accounts.get_user_by_session_token(session["user_token"])
@@ -11,8 +12,8 @@ defmodule BlogWeb.Live.DashboardLive.CategoryLive.Index do
 
     socket =
       socket
-      |> assign(current_user: current_user)
-      |> assign(categories: categories)
+      |> stream(:categories, categories)
+      |> assign(:current_user, current_user)
       |> assign(form: to_form(changeset))
       |> assign(check_errors: false)
 

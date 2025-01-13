@@ -48,8 +48,8 @@
         </thead>
         
         <%!-- table content goes here --%>
-        <tbody>
-            <tr :for={category <- @categories} id="1">
+        <tbody id="categories" phx-update="stream">
+            <tr :for={{category_id, category} <- @streams.categories} id={category_id}>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <div class="flex items-center">
                   <div class="ml-3">
@@ -61,7 +61,7 @@
               </td>
               
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <a href="#" class="text-indigo-600 whitespace-no-wrap" phx-click="delete" phx-value-id="1">
+                <a href="#" class="text-indigo-600 whitespace-no-wrap" phx-click="delete" phx-value-id={category_id}>
                   <i class="fa fa-trash"></i>
                 </a>
               </td>
