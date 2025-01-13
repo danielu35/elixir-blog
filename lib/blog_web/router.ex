@@ -18,8 +18,9 @@ defmodule BlogWeb.Router do
   end
 
   scope "/", BlogWeb do
-    pipe_through :browser
+    pipe_through [:browser, :require_authenticated_user]
     live "/dashboard", Live.DashboardLive.Index
+    live "/dashboard/:page", Live.DashboardLive.CategoryLive.Index
   end
 
   # Other scopes may use custom stacks.

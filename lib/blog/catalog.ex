@@ -2,8 +2,9 @@ defmodule Blog.Catalog do
   use Ecto.Schema
   import Ecto.Query, warn: false
   import Ecto.Changeset
+  alias Blog.Category
   alias Blog.Repo
-  alias Blog.Catalog.Post
+  alias Blog.Post
 
   schema "catalogs" do
     field :name, :string
@@ -18,6 +19,10 @@ defmodule Blog.Catalog do
     catalog
     |> cast(attrs, [:name, :description])
     |> validate_required([:name, :description])
+  end
+
+  def change_category(%Category{} = category, attrs \\ %{}) do
+    Category.changeset(category, attrs)
   end
 
   def list_catalogs do
@@ -42,11 +47,17 @@ defmodule Blog.Catalog do
     |> Repo.insert()
   end
 
-  # def create_post(attrs \\ %{}) do
-  #   %Post{}
-  #   |> Post.changeset(attrs)
-  #   |> Repo.insert()
-  # end
+  def create_category(attrs \\ %{}) do
+    %Category{}
+    |> Category.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_post(attrs \\ %{}) do
+    %Post{}
+    |> Post.changeset(attrs)
+    |> Repo.insert()
+  end
 
   def update_catalog(catalog, attrs \\ %{}) do
     catalog
@@ -70,5 +81,9 @@ defmodule Blog.Catalog do
 
   def list_posts_by_catalog(catalog_id) do
     Repo.all(from p in Post, where: p.catalog_id == ^catalog_id)
+  end
+
+  def list_categories do
+    Repo.all(Category)
   end
 end

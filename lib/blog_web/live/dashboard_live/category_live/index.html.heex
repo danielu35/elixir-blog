@@ -1,0 +1,74 @@
+<div id="main" class="main-content flex-1 bg-gray-100 mt-12 md:mt-2 pb-24 md:pb-5 w-full">
+  <div class="bg-gray-800 pt-3">
+    <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
+      <h1 class="font-bold pl-2">Categories</h1>
+    </div>
+  </div>
+  
+  <div class="flex h-screen">
+    <div class="w-1/2 mt-3">
+      <div class="max-w-lg mx-auto bg-white p-8 rounded shadow-md mt-2">
+        <h2 class="text-2xl font-semibold mb-4">Create a New Category</h2>
+        <%!-- form goes here --%>
+        <.simple_form
+          for={@form}
+          id="category-form"
+          method="post"
+          phx-submit="save"
+          phx-change="validate"
+        >
+          <.error :if={@check_errors}>
+            Oops! Looks like there are some errors with your submission.
+          </.error>
+          <.input field={@form[:name]} type="text" label="Name" phx-debounce="2000" /> 
+          <.input field={@form[:user_id]} type="hidden" value={@current_user.id} />
+
+          <:actions>
+            <.button phx-disable-with="Creating..." class="w-full">
+              Create Category
+            </.button>
+          </:actions>
+        </.simple_form>
+    
+      </div>
+    </div>
+    
+    <div class="w-1/2 mt-4">
+      <table class="min-w-full leading-normal">
+        <thead>
+          <tr>
+            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-800 text-left text-xs font-semibold text-white uppercase tracking-wider">
+              Category Name
+            </th>
+            
+            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-800 text-left text-xs font-semibold text-white uppercase tracking-wider">
+              Action
+            </th>
+          </tr>
+        </thead>
+        
+        <%!-- table content goes here --%>
+        <tbody>
+            <tr :for={category <- @categories} id="1">
+              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                <div class="flex items-center">
+                  <div class="ml-3">
+                  <p class="text-gray-900 whitespace-no-wrap">
+                    <%= category.name %>
+                  </p>
+                  </div>
+                </div>
+              </td>
+              
+              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                <a href="#" class="text-indigo-600 whitespace-no-wrap" phx-click="delete" phx-value-id="1">
+                  <i class="fa fa-trash"></i>
+                </a>
+              </td>
+            </tr>
+       
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

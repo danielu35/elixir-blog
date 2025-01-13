@@ -3,6 +3,7 @@ defmodule Blog.Post do
   import Ecto.Changeset
 
   schema "posts" do
+    field :catagory_id, :id
     field :active, :boolean, default: false
     field :title, :string
     field :summery, :string
