@@ -19,8 +19,12 @@ defmodule BlogWeb.Router do
 
   scope "/", BlogWeb do
     pipe_through [:browser, :require_authenticated_user]
+    get "/", PageController, :index
     live "/dashboard", Live.DashboardLive.Index
-    live "/dashboard/category", Live.DashboardLive.CategoryLive.Index
+    live "/dashboard/categories", Live.DashboardLive.CategoryLive.Index
+    live "/dashboard/posts", Live.DashboardLive.PostLive.Index
+    live "/dashboard/posts/:id/edit", Live.DashboardLive.PostLive.Show
+    live "/dashboard/posts/new", Live.DashboardLive.PostLive.New
   end
 
   # Other scopes may use custom stacks.

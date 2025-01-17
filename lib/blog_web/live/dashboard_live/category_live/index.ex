@@ -1,7 +1,6 @@
 defmodule BlogWeb.Live.DashboardLive.CategoryLive.Index do
   use BlogWeb, :live_view
-  alias Blog.Catalog
-  alias Blog.Category
+  alias Blog.Catalog.{Category}
   alias Blog.Accounts
 
 
@@ -21,25 +20,24 @@ defmodule BlogWeb.Live.DashboardLive.CategoryLive.Index do
   end
 
   def handle_event("validate", %{"category" => category_params}, socket) do
+    # Create a changeset with the category params and validate it
     changeset =
       %Category{}
       |> Catalog.change_category(category_params)
       |> Map.put(:action, :validate)
 
     form = to_form(changeset)
+    # Assign the form with errors if there are any
     {:noreply, assign(socket, form: form, check_errors: true)}
-
-    {:noreply, socket}
   end
 
   def handle_event("save", %{"category" => category_params}, socket) do
     case Catalog.create_category(category_params) do
-      {:ok, _category} ->
-        # Reset the form by assigning a fresh changeset
+      # If the category was created successfully, insert it into the socket at the top
+      {:ok, category} ->
+        socket = stream_insert(socket, :categories, category, at: 0)
         changeset = Catalog.change_category(%Category{}, %{})
-        IO.inspect(changeset, label: "Reset changeset")
-        IO.inspect(to_form(changeset), label: "Reset form data")
-
+        # Clear the form and show a success message
         {:noreply,
          assign(socket, form: to_form(changeset), check_errors: false)
          |> put_flash(:info, "Category created successfully")}
@@ -48,6 +46,19 @@ defmodule BlogWeb.Live.DashboardLive.CategoryLive.Index do
         # Handle errors by reassigning the form with errors
         form = to_form(changeset)
         {:noreply, assign(socket, form: form, check_errors: true)}
+    end
+  end
+
+  def handle_event("delete", %{"id" => id}, socket) do
+    category = Catalog.get_category!(id)
+    case Catalog.delete_category(category) do
+      {:ok, _category} ->
+        socket = stream_delete(socket, :categories, category)
+        {:noreply, socket |> put_flash(:info, "Category deleted successfully")}
+
+      {:error, _reason} ->
+        # Handle errors by showing an error message
+        {:noreply, socket |> put_flash(:error, "Failed to delete category")}
     end
   end
 end
