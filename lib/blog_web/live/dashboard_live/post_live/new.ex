@@ -17,6 +17,12 @@ defmodule BlogWeb.Live.DashboardLive.PostLive.New do
       |> assign(:categories, categories)
       |> assign(:form, form)
       |> assign(:check_errors, check_errors)
+      |> allow_upload(:image,
+        accept: ~w(image/*),
+        max_entries: 1,
+        max_file_size: 5_000_000
+      )
+
     {:ok, socket}
   end
 
@@ -31,7 +37,26 @@ defmodule BlogWeb.Live.DashboardLive.PostLive.New do
   end
 
   def handle_event("save", %{"post" => post_params}, socket) do
-    case Catalog.create_post(post_params) do
+    image_location =
+      consume_uploaded_entries(socket, :image, fn meta, entry ->
+        destination_dir = Path.join(["priv", "static", "uploads"])
+        IO.inspect(destination_dir, label: "destination_dir")
+
+        destination = Path.join([destination_dir, "#{entry.uuid}-#{entry.client_name}"])
+
+        File.cp!(meta.path, destination)
+
+        file_path = static_path(socket, "/uploads/#{Path.basename(destination)}")
+        IO.inspect(file_path, label: "file_path")
+
+        {:ok, file_path}
+      end)
+
+    new_post_params = Map.put(post_params, "image", List.first(image_location))
+
+    IO.inspect(new_post_params, label: "params")
+
+    case Catalog.create_post(new_post_params) do
       {:ok, _post} ->
         changeset = Catalog.change_post(%Post{}, %{})
 

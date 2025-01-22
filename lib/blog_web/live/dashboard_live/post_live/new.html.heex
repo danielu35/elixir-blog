@@ -27,10 +27,10 @@
         options={@categories}
         prompt="Select Category"
       />
-      <%!-- <.live_file_input upload={@uploads.image} />
-      <div :for={entry <- @uploads.image_entries} class="entry">
+      <.live_file_input upload={@uploads.image} />
+      <div :for={entry <- @uploads.image.entries} class="entry">
         <.live_img_preview entry={entry} />
-      </div> --%>
+      </div>
       <.input field={@form[:user_id]} type="hidden" value={@current_user.id} />
       <.input field={@form[:summary]} type="textarea" label="Post Summery" required />
       <.input field={@form[:content]} type="textarea" label="Post Content" required />

@@ -1,6 +1,7 @@
 defmodule BlogWeb.Live.DashboardLive.CategoryLive.Index do
   use BlogWeb, :live_view
-  alias Blog.Catalog.{Category}
+  alias Blog.Catalog
+  alias Blog.Catalog.Category
   alias Blog.Accounts
 
 

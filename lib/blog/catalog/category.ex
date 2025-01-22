@@ -25,6 +25,7 @@ defmodule Blog.Catalog.Category do
   schema "categories" do
     field :active, :boolean, default: false
     field :name, :string
+    field :description, :string
     belongs_to :user, Blog.User
     has_many :posts, Blog.Catalog.Post
 

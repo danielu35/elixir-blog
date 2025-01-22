@@ -32,6 +32,7 @@ defmodule Blog.Catalog.Post do
     field :summary, :string
     field :content, :string
     field :active, :boolean, default: false
+    field :image, :string
     belongs_to :user, Blog.Accounts.User
     belongs_to :category, Blog.Catalog.Category
 
@@ -41,7 +42,8 @@ defmodule Blog.Catalog.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:title, :summary, :content, :active, :user_id, :category_id])
-    |> validate_required([:title, :user_id, :category_id])
+    |> cast(attrs, [:title, :summary, :content, :active, :user_id, :category_id, :image])
+    |> validate_required([:title, :summary, :content, :active, :user_id, :category_id, :image])
+    |> validate_length(:title, min: 3, max: 100)
   end
 end
