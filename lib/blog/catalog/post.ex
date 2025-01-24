@@ -27,7 +27,6 @@ defmodule Blog.Catalog.Post do
   import Ecto.Changeset
 
   schema "posts" do
-    field :catagory_id, :id
     field :title, :string
     field :summary, :string
     field :content, :string

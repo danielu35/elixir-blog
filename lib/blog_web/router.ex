@@ -18,12 +18,16 @@ defmodule BlogWeb.Router do
   end
 
   scope "/", BlogWeb do
+    pipe_through :browser
+    live "/", Live.ClientLive.HomeLive.Index
+  end
+
+  scope "/", BlogWeb do
     pipe_through [:browser, :require_authenticated_user]
-    get "/", PageController, :index
     live "/dashboard", Live.DashboardLive.Index
     live "/dashboard/categories", Live.DashboardLive.CategoryLive.Index
     live "/dashboard/posts", Live.DashboardLive.PostLive.Index
-    live "/dashboard/posts/:id/edit", Live.DashboardLive.PostLive.Show
+    live "/dashboard/posts/:id/edit", Live.DashboardLive.PostLive.Edit, :edit
     live "/dashboard/posts/new", Live.DashboardLive.PostLive.New
   end
 

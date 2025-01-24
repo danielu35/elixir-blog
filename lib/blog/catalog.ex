@@ -33,7 +33,7 @@ defmodule Blog.Catalog do
   end
 
   def list_posts do
-    Repo.all(Post)
+    Repo.all(from p in Post, order_by: [desc: p.inserted_at], preload: [:category, :user])
   end
 
   def get_catalog!(id) do
