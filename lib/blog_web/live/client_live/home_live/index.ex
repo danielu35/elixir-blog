@@ -3,8 +3,11 @@ defmodule BlogWeb.Live.ClientLive.HomeLive.Index do
   alias Blog.Catalog
 
   def mount(_params, _session, socket) do
-    # catalogs = Catalog.list_catalogs()
-    # socket = socket |> stream(:catalogs, catalogs)
+    posts = Catalog.list_posts()
+    formatted_posts = Enum.map(posts, fn post ->
+      %{post | inserted_at: Timex.format!(post.inserted_at, "{Mfull} {D}, {YYYY}")}
+    end)
+    socket = socket |> assign(posts: formatted_posts)
     {:ok, socket}
   end
 
