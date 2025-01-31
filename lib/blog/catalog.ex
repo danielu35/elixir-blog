@@ -2,8 +2,9 @@ defmodule Blog.Catalog do
   use Ecto.Schema
   import Ecto.Query, warn: false
   import Ecto.Changeset
-  alias Blog.Catalog.{Category, Post}
+  alias Blog.Catalog.Category
   alias Blog.Repo
+  alias Blog.Catalog.Post
 
   schema "catalogs" do
     field :name, :string
@@ -45,7 +46,7 @@ defmodule Blog.Catalog do
   end
 
   def get_post!(id) do
-    Repo.get!(Post, id)
+    Repo.get!(Post, id) |> Repo.preload([:category, :user])
   end
 
   def create_catalog(attrs \\ %{}) do
@@ -92,6 +93,16 @@ defmodule Blog.Catalog do
 
   def list_posts_by_catalog(catalog_id) do
     Repo.all(from p in Post, where: p.catalog_id == ^catalog_id)
+  end
+
+  def list_posts_by_category(category_id) do
+    Repo.all(
+      from p in Post,
+        where: p.category_id == ^category_id,
+        order_by: [desc: p.inserted_at],
+        preload: [:category, :user]
+    )
+    |> Repo.preload([:category, :user])
   end
 
   def list_categories do

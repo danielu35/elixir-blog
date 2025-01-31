@@ -20,6 +20,8 @@ defmodule BlogWeb.Router do
   scope "/", BlogWeb do
     pipe_through :browser
     live "/", Live.ClientLive.HomeLive.Index
+    live "/posts/:id/show", Live.ClientLive.PostLive.Show
+    live "/categories/:id/posts", Live.ClientLive.CategoryLive.Posts
   end
 
   scope "/", BlogWeb do
