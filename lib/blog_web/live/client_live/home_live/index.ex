@@ -6,11 +6,21 @@ defmodule BlogWeb.Live.ClientLive.HomeLive.Index do
     IO.inspect(BlogWeb.static_paths(), label: "static_paths")
     posts = Catalog.list_posts()
     categories = Catalog.list_categories()
-    formatted_posts = Enum.map(posts, fn post ->
-      %{post | inserted_at: Timex.format!(post.inserted_at, "{Mfull} {D}, {YYYY}")}
-    end)
+    formatted_posts =
+      Enum.map(posts, fn post ->
+        formatted_date =
+          post.inserted_at
+          |> Timex.to_datetime()
+          |> Timex.format("{Mfull} {D}, {YYYY}")
+
+          case formatted_date do
+            {:ok, date} -> %{post | inserted_at: date}
+            {:error, _reason} -> post
+          end
+      end)
+
     socket = socket |> assign(posts: formatted_posts)
-    {:ok, assign(socket, categories: categories, posts: posts)}
+    {:ok, assign(socket, categories: categories, posts: formatted_posts)}
   end
 
   # def handle_event("delete", %{"id" => id}, socket) do
